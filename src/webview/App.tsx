@@ -78,14 +78,7 @@ export function App() {
 
   return (
     <div className="launchpad">
-      {/* ── Header ─────────────────────────────────── */}
-      <header className="lp-header">
-        <div className="lp-header-brand">
-          <span className="lp-header-icon" aria-hidden="true">🚀</span>
-          <h1 className="lp-header-title">LaunchPad</h1>
-        </div>
-        <span className="lp-header-subtitle">Debug Config Manager</span>
-      </header>
+
 
       {/* ── Tab Bar ────────────────────────────────── */}
       <nav className="lp-tabs" role="tablist">
