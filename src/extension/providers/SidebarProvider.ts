@@ -2,6 +2,7 @@ import * as vscode from 'vscode';
 import type { ExtensionToWebviewMessage, WebviewToExtensionMessage } from '../../shared/protocol';
 import { ConfigService } from '../services/ConfigService';
 import { TaskService } from '../services/TaskService';
+import { EditorPanelManager } from './EditorPanelManager';
 
 /**
  * Provides the sidebar webview for the Debug panel.
@@ -14,7 +15,8 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
     private readonly _extensionUri: vscode.Uri,
     private readonly _context: vscode.ExtensionContext,
     private readonly _configService: ConfigService,
-    private readonly _taskService: TaskService
+    private readonly _taskService: TaskService,
+    private readonly _editorPanel: EditorPanelManager
   ) {
     // Live-sync: push updates when files change externally
     this._configService.onDidChange((configs) => {
@@ -70,9 +72,7 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
 
       // ── Config Actions ───────────────────────────────────────
       case 'createConfig':
-        vscode.window.showInformationMessage(
-          'LaunchPad: Config editor coming in the next feature!'
-        );
+        this._editorPanel.openNewConfig();
         break;
 
       case 'runConfig':
@@ -97,21 +97,13 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
         await this._configService.duplicateConfig(message.index);
         break;
 
-      case 'editConfig': {
-        // For now, open the raw launch.json at the config's position
-        const uri = this._getLaunchJsonUri();
-        if (uri) {
-          const doc = await vscode.workspace.openTextDocument(uri);
-          await vscode.window.showTextDocument(doc);
-        }
+      case 'editConfig':
+        this._editorPanel.openEditConfig(message.index);
         break;
-      }
 
       // ── Task Actions ─────────────────────────────────────────
       case 'createTask':
-        vscode.window.showInformationMessage(
-          'LaunchPad: Task editor coming in the next feature!'
-        );
+        this._editorPanel.openNewTask();
         break;
 
       case 'runTask':
@@ -136,14 +128,9 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
         await this._taskService.duplicateTask(message.index);
         break;
 
-      case 'editTask': {
-        const uri = this._getTasksJsonUri();
-        if (uri) {
-          const doc = await vscode.workspace.openTextDocument(uri);
-          await vscode.window.showTextDocument(doc);
-        }
+      case 'editTask':
+        this._editorPanel.openEditTask(message.index);
         break;
-      }
 
       default:
         console.log('[LaunchPad] Unhandled webview message:', message);

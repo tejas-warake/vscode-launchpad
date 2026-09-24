@@ -1,5 +1,6 @@
 import * as vscode from 'vscode';
 import { SidebarProvider } from './providers/SidebarProvider';
+import { EditorPanelManager } from './providers/EditorPanelManager';
 import { ConfigService } from './services/ConfigService';
 import { TaskService } from './services/TaskService';
 
@@ -10,12 +11,20 @@ export function activate(context: vscode.ExtensionContext) {
   const configService = new ConfigService();
   const taskService = new TaskService();
 
+  // ── Editor Panel ─────────────────────────────────────────────
+  const editorPanel = new EditorPanelManager(
+    context.extensionUri,
+    configService,
+    taskService
+  );
+
   // ── Sidebar Webview ──────────────────────────────────────────
   const sidebarProvider = new SidebarProvider(
     context.extensionUri,
     context,
     configService,
-    taskService
+    taskService,
+    editorPanel
   );
 
   context.subscriptions.push(
@@ -29,11 +38,11 @@ export function activate(context: vscode.ExtensionContext) {
   // ── Commands ─────────────────────────────────────────────────
   context.subscriptions.push(
     vscode.commands.registerCommand('launchpad.newConfig', () => {
-      sidebarProvider.postMessage({ type: 'newConfig' });
+      editorPanel.openNewConfig();
     }),
 
     vscode.commands.registerCommand('launchpad.newTask', () => {
-      sidebarProvider.postMessage({ type: 'newTask' });
+      editorPanel.openNewTask();
     }),
 
     vscode.commands.registerCommand('launchpad.refresh', async () => {

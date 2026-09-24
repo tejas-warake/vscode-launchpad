@@ -4,12 +4,26 @@ const production = process.argv.includes('--production');
 const watch = process.argv.includes('--watch');
 
 /**
- * Dual-target build:
+ * Triple-target build:
  *  1. Extension host → CommonJS, Node platform, excludes 'vscode'
- *  2. Webview UI     → IIFE, Browser platform, bundles React
+ *  2. Sidebar webview → IIFE, Browser platform, bundles React
+ *  3. Editor panel webview → IIFE, Browser platform, bundles React
  */
 async function main() {
-  // --- Extension Host Build ---
+  const commonWeb = {
+    bundle: true,
+    format: 'iife',
+    minify: production,
+    sourcemap: !production,
+    sourcesContent: false,
+    platform: 'browser',
+    logLevel: 'info',
+    tsconfig: 'tsconfig.json',
+    jsx: 'automatic',
+    loader: { '.svg': 'dataurl' },
+  };
+
+  // --- Extension Host ---
   const extCtx = await esbuild.context({
     entryPoints: ['src/extension/extension.ts'],
     bundle: true,
@@ -24,30 +38,26 @@ async function main() {
     tsconfig: 'tsconfig.json',
   });
 
-  // --- Webview UI Build ---
-  const webCtx = await esbuild.context({
+  // --- Sidebar Webview ---
+  const sidebarCtx = await esbuild.context({
+    ...commonWeb,
     entryPoints: ['src/webview/main.tsx'],
-    bundle: true,
-    format: 'iife',
-    minify: production,
-    sourcemap: !production,
-    sourcesContent: false,
-    platform: 'browser',
     outdir: 'dist/webview',
-    logLevel: 'info',
-    tsconfig: 'tsconfig.json',
-    jsx: 'automatic',
-    loader: {
-      '.svg': 'dataurl',
-    },
+  });
+
+  // --- Editor Panel Webview ---
+  const editorCtx = await esbuild.context({
+    ...commonWeb,
+    entryPoints: ['src/webview-editor/editor.tsx'],
+    outdir: 'dist/webview-editor',
   });
 
   if (watch) {
-    await Promise.all([extCtx.watch(), webCtx.watch()]);
-    console.log('[esbuild] Watching extension + webview for changes...');
+    await Promise.all([extCtx.watch(), sidebarCtx.watch(), editorCtx.watch()]);
+    console.log('[esbuild] Watching extension + sidebar + editor for changes...');
   } else {
-    await Promise.all([extCtx.rebuild(), webCtx.rebuild()]);
-    await Promise.all([extCtx.dispose(), webCtx.dispose()]);
+    await Promise.all([extCtx.rebuild(), sidebarCtx.rebuild(), editorCtx.rebuild()]);
+    await Promise.all([extCtx.dispose(), sidebarCtx.dispose(), editorCtx.dispose()]);
   }
 }
 

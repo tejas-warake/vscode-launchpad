@@ -42,3 +42,38 @@ export type WebviewToExtensionMessage =
   | { type: 'deleteTask'; index: number }
   | { type: 'duplicateTask'; index: number }
   | { type: 'editTask'; index: number };
+
+// ─── Editor Panel Protocol ───────────────────────────────────────
+export type EditorToWebviewMessage =
+  | { type: 'loadConfig'; config: LaunchConfig; index: number; isNew: boolean }
+  | { type: 'loadTask'; task: TaskConfig; index: number; isNew: boolean };
+
+export type EditorToExtensionMessage =
+  | { type: 'ready' }
+  | { type: 'saveConfig'; config: LaunchConfig; index: number; isNew: boolean }
+  | { type: 'saveTask'; task: TaskConfig; index: number; isNew: boolean }
+  | { type: 'runConfig'; name: string }
+  | { type: 'cancel' }
+  | { type: 'pickFile'; field: string }
+  | { type: 'pickFolder'; field: string };
+
+// File picker response
+export type EditorFilePickResult =
+  | { type: 'filePickResult'; field: string; path: string };
+
+// ─── Debug Type Templates ────────────────────────────────────────
+
+export interface ConfigTemplate {
+  name: string;
+  description: string;
+  icon: string;
+  config: Partial<LaunchConfig>;
+}
+
+export interface DebugTypeInfo {
+  type: string;
+  label: string;
+  icon: string;
+  color: string;
+  templates: ConfigTemplate[];
+}
