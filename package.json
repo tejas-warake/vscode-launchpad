@@ -1,0 +1,88 @@
+{
+  "name": "launchpad-debug-config",
+  "displayName": "LaunchPad — Debug Config Manager",
+  "description": "Never edit launch.json by hand again. Beautiful visual manager for debug configurations and tasks.",
+  "version": "0.0.1",
+  "license": "MIT",
+  "publisher": "launchpad",
+  "engines": {
+    "vscode": "^1.85.0"
+  },
+  "categories": [
+    "Debuggers",
+    "Other"
+  ],
+  "keywords": [
+    "debug",
+    "launch.json",
+    "tasks.json",
+    "configuration",
+    "visual editor",
+    "debug manager"
+  ],
+  "activationEvents": [],
+  "main": "./dist/extension.js",
+  "contributes": {
+    "views": {
+      "debug": [
+        {
+          "type": "webview",
+          "id": "launchpad.sidebar",
+          "name": "LaunchPad"
+        }
+      ]
+    },
+    "commands": [
+      {
+        "command": "launchpad.newConfig",
+        "title": "New Launch Configuration",
+        "category": "LaunchPad",
+        "icon": "$(add)"
+      },
+      {
+        "command": "launchpad.newTask",
+        "title": "New Task",
+        "category": "LaunchPad",
+        "icon": "$(add)"
+      },
+      {
+        "command": "launchpad.refresh",
+        "title": "Refresh",
+        "category": "LaunchPad",
+        "icon": "$(refresh)"
+      }
+    ],
+    "menus": {
+      "view/title": [
+        {
+          "command": "launchpad.newConfig",
+          "when": "view == launchpad.sidebar",
+          "group": "navigation"
+        },
+        {
+          "command": "launchpad.refresh",
+          "when": "view == launchpad.sidebar",
+          "group": "navigation"
+        }
+      ]
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run build",
+    "build": "node esbuild.js --production",
+    "watch": "node esbuild.js --watch",
+    "lint": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@types/react": "^18.2.48",
+    "@types/react-dom": "^18.2.18",
+    "@types/vscode": "^1.85.0",
+    "esbuild": "^0.19.12",
+    "typescript": "^5.3.3"
+  },
+  "dependencies": {
+    "jsonc-parser": "^3.2.1",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  }
+}
