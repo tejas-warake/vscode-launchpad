@@ -182,6 +182,78 @@ body {
   word-break: break-word;
 }
 
+/* ─── Wizard ─────────────────────────────────────────────────── */
+.ed-wizard-content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+.ed-wizard-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 20px;
+  width: 100%;
+  max-width: 900px;
+  animation: ed-tagIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.ed-wizard-card {
+  --hover-color: var(--ed-accent);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 24px;
+  background: var(--vscode-editor-background);
+  border: 1px solid var(--vscode-panel-border, rgba(128,128,128,0.2));
+  border-radius: var(--ed-radius);
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+.ed-wizard-card:hover {
+  transform: translateY(-4px) scale(1.02);
+  border-color: var(--hover-color);
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05), 0 0 0 1px var(--hover-color);
+}
+
+.ed-wizard-card-icon {
+  font-size: 48px;
+  margin-bottom: 16px;
+  transition: transform 0.3s ease;
+}
+
+.ed-wizard-card:hover .ed-wizard-card-icon {
+  transform: scale(1.1);
+}
+
+.ed-wizard-card-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--vscode-foreground);
+  margin-bottom: 8px;
+}
+
+.ed-wizard-card-desc {
+  font-size: 13px;
+  color: var(--vscode-descriptionForeground, #888);
+}
+
+.ed-wizard-card--template {
+  text-align: left;
+  align-items: flex-start;
+}
+
+.ed-wizard-card--template .ed-wizard-card-icon {
+  font-size: 24px;
+  margin-bottom: 12px;
+}
+
 /* ─── Form ───────────────────────────────────────────────────── */
 .ed-form {
   display: flex;

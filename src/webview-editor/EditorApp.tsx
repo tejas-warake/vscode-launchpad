@@ -2,8 +2,9 @@ import { useState, useEffect, useCallback } from 'react';
 import { vscode, onMessage } from './editorVscodeApi';
 import type { LaunchConfig, TaskConfig } from '../shared/protocol';
 import { DEBUG_TYPES } from '../shared/templates';
+import { Wizard } from './Wizard';
 
-type EditorMode = 'loading' | 'config' | 'task';
+type EditorMode = 'loading' | 'config' | 'task' | 'wizard';
 
 export function EditorApp() {
   const [mode, setMode] = useState<EditorMode>('loading');
@@ -16,10 +17,16 @@ export function EditorApp() {
     const unsubscribe = onMessage((message) => {
       switch (message.type) {
         case 'loadConfig':
-          setConfig({ ...message.config });
-          setIndex(message.index);
-          setIsNew(message.isNew);
-          setMode('config');
+          if (message.isNew) {
+            setMode('wizard');
+            setIndex(message.index);
+            setIsNew(true);
+          } else {
+            setConfig({ ...message.config });
+            setIndex(message.index);
+            setIsNew(false);
+            setMode('config');
+          }
           break;
         case 'loadTask':
           setTask({ ...message.task });
@@ -45,6 +52,18 @@ export function EditorApp() {
         <div className="ed-loading-spinner" />
         <p>Loading editor...</p>
       </div>
+    );
+  }
+
+  if (mode === 'wizard') {
+    return (
+      <Wizard
+        onComplete={(selectedConfig) => {
+          setConfig(selectedConfig);
+          setMode('config');
+        }}
+        onCancel={() => vscode.postMessage({ type: 'cancel' })}
+      />
     );
   }
 
