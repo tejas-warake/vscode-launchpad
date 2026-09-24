@@ -42,12 +42,3 @@ LaunchPad comes with built-in templates and language-aware icons for:
 
 - `LaunchPad: New Configuration`: Open the wizard to create a new `launch.json` entry.
 - `LaunchPad: New Task`: Open the visual editor to create a new `tasks.json` entry.
-
-## 🤝 Contributing
-
-This extension is designed to be the global standard for debug configuration management. If you have a favorite debugger type that is missing a template, feel free to open a PR!
-
----
-<div align="center">
-  Crafted with ❤️ for developers who love great UX.
-</div>
