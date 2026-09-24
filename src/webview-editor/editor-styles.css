@@ -182,6 +182,10 @@ body {
   word-break: break-word;
 }
 
+.ed-preview-code code {
+  background: transparent !important;
+}
+
 /* ─── Wizard ─────────────────────────────────────────────────── */
 .ed-wizard-content {
   flex: 1;
