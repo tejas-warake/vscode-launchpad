@@ -34,6 +34,7 @@ async function main() {
     platform: 'node',
     outfile: 'dist/extension.js',
     external: ['vscode'],
+    mainFields: ['module', 'main'],
     logLevel: 'info',
     tsconfig: 'tsconfig.json',
   });
