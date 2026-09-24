@@ -2,6 +2,7 @@ import * as vscode from 'vscode';
 import type { ExtensionToWebviewMessage, WebviewToExtensionMessage } from '../../shared/protocol';
 import { ConfigService } from '../services/ConfigService';
 import { TaskService } from '../services/TaskService';
+import { DetectionService } from '../services/DetectionService';
 import { EditorPanelManager } from './EditorPanelManager';
 
 /**
@@ -57,11 +58,12 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
 
   /** Read configs + tasks and push to the webview. */
   public async sendInitialData() {
-    const [configs, tasks] = await Promise.all([
+    const [configs, tasks, recommendedConfigs] = await Promise.all([
       this._configService.getConfigs(),
       this._taskService.getTasks(),
+      DetectionService.detectConfigs(),
     ]);
-    this.postMessage({ type: 'init', configs, tasks });
+    this.postMessage({ type: 'init', configs, tasks, recommendedConfigs });
   }
 
   private async _handleMessage(message: WebviewToExtensionMessage) {
@@ -73,6 +75,10 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
       // ── Config Actions ───────────────────────────────────────
       case 'createConfig':
         this._editorPanel.openNewConfig();
+        break;
+
+      case 'createFromTemplate':
+        this._editorPanel.openNewConfig(message.config);
         break;
 
       case 'runConfig':

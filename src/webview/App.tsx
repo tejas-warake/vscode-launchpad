@@ -10,6 +10,7 @@ export function App() {
   const [activeTab, setActiveTab] = useState<Tab>('configs');
   const [configs, setConfigs] = useState<LaunchConfig[]>([]);
   const [tasks, setTasks] = useState<TaskConfig[]>([]);
+  const [recommendedConfigs, setRecommendedConfigs] = useState<Partial<LaunchConfig>[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
 
   useEffect(() => {
@@ -18,6 +19,9 @@ export function App() {
         case 'init':
           setConfigs(message.configs);
           setTasks(message.tasks);
+          if (message.recommendedConfigs) {
+            setRecommendedConfigs(message.recommendedConfigs);
+          }
           break;
         case 'configsUpdated':
           setConfigs(message.configs);
@@ -138,7 +142,7 @@ export function App() {
       <div className="lp-content">
         {activeTab === 'configs' ? (
           configs.length === 0 ? (
-            <EmptyState type="configs" onCreate={handleCreateConfig} />
+            <EmptyState type="configs" onCreate={handleCreateConfig} recommendedConfigs={recommendedConfigs} />
           ) : filteredConfigs.length === 0 ? (
             <NoResults query={searchQuery} />
           ) : (
@@ -184,9 +188,11 @@ export function App() {
 function EmptyState({
   type,
   onCreate,
+  recommendedConfigs = [],
 }: {
   type: 'configs' | 'tasks';
   onCreate: () => void;
+  recommendedConfigs?: Partial<LaunchConfig>[];
 }) {
   const isConfigs = type === 'configs';
 
@@ -218,6 +224,22 @@ function EmptyState({
         <span className="lp-empty-cta-icon">+</span>
         {isConfigs ? 'Create Configuration' : 'Create Task'}
       </button>
+
+      {isConfigs && recommendedConfigs.length > 0 && (
+        <div className="lp-empty-recommended">
+          <div className="lp-empty-recommended-title">Quick Start</div>
+          {recommendedConfigs.map((c, i) => (
+            <button
+              key={i}
+              className="lp-empty-recommended-btn"
+              onClick={() => vscode.postMessage({ type: 'createFromTemplate', config: c })}
+            >
+              <span className="lp-empty-recommended-icon">⚡</span>
+              {c.name}
+            </button>
+          ))}
+        </div>
+      )}
       <div className="lp-empty-hint">
         <span className="lp-empty-hint-icon">💡</span>
         {isConfigs

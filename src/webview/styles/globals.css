@@ -300,6 +300,53 @@ body {
   line-height: 1;
 }
 
+/* ── Recommended / Quick Start ───────────────────────────────── */
+.lp-empty-recommended {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 24px;
+  width: 100%;
+  max-width: 260px;
+  animation: lp-fadeInUp 0.5s ease 0.1s both;
+}
+
+.lp-empty-recommended-title {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--vscode-descriptionForeground, #888);
+  text-align: left;
+  margin-bottom: 4px;
+}
+
+.lp-empty-recommended-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  background: var(--vscode-button-secondaryBackground, rgba(128,128,128,0.1));
+  color: var(--vscode-button-secondaryForeground, var(--vscode-foreground));
+  border: 1px solid var(--vscode-button-secondaryBackground, rgba(128,128,128,0.2));
+  border-radius: var(--lp-radius-sm);
+  font-family: var(--lp-font);
+  font-size: 12px;
+  cursor: pointer;
+  transition: all var(--lp-transition);
+  text-align: left;
+}
+
+.lp-empty-recommended-btn:hover {
+  background: var(--vscode-list-hoverBackground, rgba(128,128,128,0.15));
+  border-color: var(--lp-accent);
+  transform: translateX(4px);
+}
+
+.lp-empty-recommended-icon {
+  font-size: 14px;
+}
+
 /* ── Hint ────────────────────────────────────────────────────── */
 .lp-empty-hint {
   display: flex;

@@ -22,7 +22,7 @@ export interface TaskConfig {
 
 // ─── Extension → Webview Messages ────────────────────────────────
 export type ExtensionToWebviewMessage =
-  | { type: 'init'; configs: LaunchConfig[]; tasks: TaskConfig[] }
+  | { type: 'init'; configs: LaunchConfig[]; tasks: TaskConfig[]; recommendedConfigs?: Partial<LaunchConfig>[] }
   | { type: 'configsUpdated'; configs: LaunchConfig[] }
   | { type: 'tasksUpdated'; tasks: TaskConfig[] }
   | { type: 'newConfig' }
@@ -34,6 +34,7 @@ export type WebviewToExtensionMessage =
   | { type: 'ready' }
   | { type: 'createConfig' }
   | { type: 'createTask' }
+  | { type: 'createFromTemplate'; config: Partial<LaunchConfig> }
   | { type: 'runConfig'; name: string }
   | { type: 'deleteConfig'; index: number }
   | { type: 'duplicateConfig'; index: number }
