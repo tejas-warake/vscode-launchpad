@@ -375,6 +375,244 @@ body {
   flex-shrink: 0;
 }
 
+/* ─── Search Bar ─────────────────────────────────────────────── */
+.lp-search {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 8px 12px 4px;
+  padding: 6px 10px;
+  background: var(--vscode-input-background, rgba(128,128,128,0.1));
+  border: 1px solid var(--vscode-input-border, rgba(128,128,128,0.2));
+  border-radius: var(--lp-radius-sm);
+  transition: border-color var(--lp-transition);
+}
+
+.lp-search:focus-within {
+  border-color: var(--vscode-focusBorder, var(--lp-accent));
+}
+
+.lp-search-icon {
+  font-size: 12px;
+  opacity: 0.6;
+  flex-shrink: 0;
+}
+
+.lp-search-input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  color: var(--vscode-input-foreground, var(--vscode-foreground));
+  font-family: var(--lp-font);
+  font-size: 12px;
+  outline: none;
+}
+
+.lp-search-input::placeholder {
+  color: var(--vscode-input-placeholderForeground, rgba(128,128,128,0.6));
+}
+
+.lp-search-clear {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  border: none;
+  border-radius: 50%;
+  background: var(--vscode-badge-background, rgba(128,128,128,0.3));
+  color: var(--vscode-badge-foreground, #fff);
+  font-size: 14px;
+  line-height: 1;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: background var(--lp-transition);
+}
+
+.lp-search-clear:hover {
+  background: var(--vscode-errorForeground, #f44);
+}
+
+/* ─── Card List ──────────────────────────────────────────────── */
+.lp-card-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+/* ─── Config / Task Card ─────────────────────────────────────── */
+.lp-card {
+  --card-accent: var(--lp-accent);
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  padding: 10px 12px;
+  background: var(--vscode-list-hoverBackground, rgba(128,128,128,0.06));
+  border: 1px solid transparent;
+  border-left: 3px solid var(--card-accent);
+  border-radius: var(--lp-radius-sm);
+  cursor: pointer;
+  transition: all var(--lp-transition);
+  animation: lp-fadeInUp 0.35s ease both;
+  position: relative;
+}
+
+.lp-card:nth-child(1) { animation-delay: 0s; }
+.lp-card:nth-child(2) { animation-delay: 0.05s; }
+.lp-card:nth-child(3) { animation-delay: 0.1s; }
+.lp-card:nth-child(4) { animation-delay: 0.15s; }
+.lp-card:nth-child(5) { animation-delay: 0.2s; }
+.lp-card:nth-child(n+6) { animation-delay: 0.25s; }
+
+.lp-card:hover {
+  background: var(--vscode-list-activeSelectionBackground, rgba(128,128,128,0.12));
+  border-color: rgba(128,128,128,0.15);
+  border-left-color: var(--card-accent);
+}
+
+.lp-card-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+.lp-card-icon {
+  font-size: 18px;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+.lp-card-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.lp-card-name {
+  display: block;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--vscode-foreground);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-bottom: 4px;
+}
+
+.lp-card-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  align-items: center;
+}
+
+.lp-card-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 1px 7px;
+  font-size: 10px;
+  font-weight: 600;
+  border-radius: 4px;
+  letter-spacing: 0.2px;
+  text-transform: capitalize;
+}
+
+.lp-card-badge--type {
+  background: var(--vscode-badge-background, rgba(128,128,128,0.2));
+  color: var(--vscode-badge-foreground, #aaa);
+}
+
+.lp-card-badge--default {
+  background: rgba(234, 179, 8, 0.15);
+  color: #eab308;
+}
+
+.lp-card-type {
+  font-size: 10px;
+  color: var(--vscode-descriptionForeground, #888);
+}
+
+.lp-card-command {
+  display: block;
+  margin-top: 4px;
+  padding: 3px 6px;
+  background: var(--vscode-textCodeBlock-background, rgba(128,128,128,0.1));
+  border-radius: 3px;
+  font-size: 10px;
+  font-family: var(--vscode-editor-font-family, monospace);
+  color: var(--vscode-descriptionForeground, #888);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ── Card Actions ────────────────────────────────────────────── */
+.lp-card-actions {
+  display: flex;
+  gap: 2px;
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px solid var(--vscode-panel-border, rgba(128,128,128,0.1));
+  opacity: 0;
+  transform: translateY(-4px);
+  transition: all var(--lp-transition);
+}
+
+.lp-card:hover .lp-card-actions {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.lp-card-action {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 5px;
+  border: none;
+  border-radius: 4px;
+  background: transparent;
+  font-size: 13px;
+  cursor: pointer;
+  transition: all var(--lp-transition);
+  opacity: 0.7;
+}
+
+.lp-card-action:hover {
+  background: var(--vscode-list-hoverBackground, rgba(128,128,128,0.15));
+  opacity: 1;
+}
+
+.lp-card-action--run {
+  color: #22c55e;
+}
+
+.lp-card-action--run:hover {
+  background: rgba(34, 197, 94, 0.15);
+}
+
+.lp-card-action--danger:hover {
+  background: rgba(239, 68, 68, 0.15);
+  color: #ef4444;
+}
+
+/* ─── No Results ─────────────────────────────────────────────── */
+.lp-no-results {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 32px 16px;
+  text-align: center;
+  color: var(--vscode-descriptionForeground, #888);
+  font-size: 12px;
+  animation: lp-fadeInUp 0.3s ease both;
+}
+
+.lp-no-results-icon {
+  font-size: 24px;
+  opacity: 0.5;
+}
+
 /* ─── Animations ─────────────────────────────────────────────── */
 @keyframes lp-float {
   0%, 100% { transform: translateY(0); }
