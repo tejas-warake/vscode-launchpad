@@ -15,6 +15,8 @@ import { TaskService } from '../services/TaskService';
  */
 export class EditorPanelManager {
   private _panel?: vscode.WebviewPanel;
+  private _isReady = false;
+  private _pendingMessages: Array<EditorToWebviewMessage | EditorFilePickResult> = [];
 
   constructor(
     private readonly _extensionUri: vscode.Uri,
@@ -97,20 +99,27 @@ export class EditorPanelManager {
 
     this._panel.onDidDispose(() => {
       this._panel = undefined;
+      this._isReady = false;
+      this._pendingMessages = [];
     });
   }
 
   private _sendToEditor(message: EditorToWebviewMessage | EditorFilePickResult) {
-    // Small delay to ensure the webview is ready
-    setTimeout(() => {
-      this._panel?.webview.postMessage(message);
-    }, 100);
+    if (this._isReady && this._panel) {
+      this._panel.webview.postMessage(message);
+    } else {
+      this._pendingMessages.push(message);
+    }
   }
 
   private async _handleMessage(message: EditorToExtensionMessage) {
     switch (message.type) {
       case 'ready':
-        // Panel just loaded — data will be sent after open
+        this._isReady = true;
+        this._pendingMessages.forEach((msg) => {
+          this._panel?.webview.postMessage(msg);
+        });
+        this._pendingMessages = [];
         break;
 
       case 'saveConfig': {

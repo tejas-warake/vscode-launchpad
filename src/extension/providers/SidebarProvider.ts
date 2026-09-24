@@ -58,12 +58,17 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
 
   /** Read configs + tasks and push to the webview. */
   public async sendInitialData() {
-    const [configs, tasks, recommendedConfigs] = await Promise.all([
-      this._configService.getConfigs(),
-      this._taskService.getTasks(),
-      DetectionService.detectConfigs(),
-    ]);
-    this.postMessage({ type: 'init', configs, tasks, recommendedConfigs });
+    try {
+      const [configs, tasks, recommendedConfigs] = await Promise.all([
+        this._configService.getConfigs(),
+        this._taskService.getTasks(),
+        DetectionService.detectConfigs(),
+      ]);
+      vscode.window.showInformationMessage(`Loaded ${configs.length} configs, ${tasks.length} tasks`);
+      this.postMessage({ type: 'init', configs, tasks, recommendedConfigs });
+    } catch (err: any) {
+      vscode.window.showErrorMessage(`Failed to load data: ${err.message}`);
+    }
   }
 
   private async _handleMessage(message: WebviewToExtensionMessage) {
